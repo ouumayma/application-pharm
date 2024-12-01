@@ -7,43 +7,41 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Patient $patient)
-    {
-        //
+        try {
+            $patient=patient::findOrFail($id);
+            return response()->json($patient);
+            } catch (\Exception $e) {
+            return response()->json("probleme de récupération des données");
+            }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $patient)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $patient=Patient::findorFail($id);
+            $patient->update($request->all());
+            return response()->json($patient);
+            } catch (\Exception $e) {
+            return response()->json("probleme de modification");
+            }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy( $id)
     {
-        //
+        try {
+            $patient=patient::findOrFail($id);
+            $patient->delete();
+            return response()->json("patient supprimée avec succes");
+            } catch (\Exception $e) {
+            return response()->json("probleme de suppression de patient");
+            }
     }
 }
