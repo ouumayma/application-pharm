@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Pharmacien extends Model
 {
-    //
 
-//    public function demandePh()
-//    {
-//        return $this->hasMany(Demande::class,'pharmacyID');
-//    }
+    use HasFactory;
+    protected $fillable = [
+'nom','prenom','email'
+];
+
 }

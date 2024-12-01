@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
+            $table->string('prenom');
+            $table->string('maladie');
+            $table->string('email');
+            $table->string('telephone');
+            $table->unsignedBigInteger('medecinID');
+            $table->foreign('medecinID')
+                  ->references('id')
+                  ->on('medecins')
+                  ->onDelete('restrict');
             $table->timestamps();
+
         });
     }
 

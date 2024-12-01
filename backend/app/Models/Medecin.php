@@ -1,14 +1,21 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Medecin extends Model
+
+    //
+
+    
 {
     use HasFactory;
+<<<<<<< HEAD
     protected $fillable =
         ['nom','prenom','mail','telephone','specialite'];
 
@@ -22,4 +29,9 @@ class Medecin extends Model
         return $this->hasMany(Patient::class,'medecinID');
     }
 
+=======
+    protected $fillable=['nom','prenom','email','type'];
+    //
+>>>>>>> 90ddc1b68756ba8981e777bd86263c32cb689352
 }
+
