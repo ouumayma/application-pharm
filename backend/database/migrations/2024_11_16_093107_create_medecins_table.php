@@ -13,6 +13,23 @@ return new class extends Migration
     {
         Schema::create('medecins', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
+            $table->string('prenom');
+            $table->string('mail');
+            $table->string('telephone');
+            $table->enum('specialite', [
+                'Généraliste',
+                'Cardiologie',
+                'Dermatologie',
+                'Gynécologie',
+                'Pédiatrie',
+                'Neurologie',
+                'Ophtalmologie',
+                'Psychiatrie',
+                'Orthopédie',
+                'Radiologie',
+                'Urologie',
+            ]);
             $table->timestamps();
         });
     }

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('medicaments', function (Blueprint $table) {
             $table->id();
+            $table->string('label');
+            $table->double('Prix');
+            $table->string('image');
+            $table->integer('quantite');
             $table->timestamps();
         });
     }
