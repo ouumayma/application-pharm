@@ -25,7 +25,7 @@ class Medecin extends Model
 
     public function patient()
     {
-        return $this->hasMany(Patient::class,'medecinID');
+        return $this->hasMany(PatientN::class,'medecinID');
     }
 
 

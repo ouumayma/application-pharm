@@ -15,10 +15,10 @@ class Patient extends Model
     'nom','prenom','maladie','emai','telephone'
     ];
 
-    public function medecin()
-        {
-            return $this->belongsTo(Medecin::class,"medecinID");
-        }
+//    public function medecin()
+//        {
+//            return $this->belongsTo(Medecin::class,"medecinID");
+//        }
 
 
 
