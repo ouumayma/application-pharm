@@ -12,7 +12,7 @@ class MedecinController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
