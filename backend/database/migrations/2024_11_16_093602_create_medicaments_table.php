@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('medicaments', function (Blueprint $table) {
             $table->id();
+            $table->string('nom'); // Ajout de la colonne 'nom'
             $table->string('label');
-            $table->double('Prix');
+            $table->double('prix'); // Correction : 'prix' en minuscule
             $table->string('image');
             $table->integer('quantite');
             $table->timestamps();
         });
+        
     }
 
     /*

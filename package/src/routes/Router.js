@@ -15,28 +15,42 @@ const Cards = lazy(() => import("../views/ui/Cards"));
 const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
-const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
+const Medicaments = lazy(() => import("../views/ui/Medicaments"));
 
+const Compte = lazy(() => import("../views/ui/Compte"));
+const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
+const SignUp = lazy(() => import("../../src/SignUp/SignUp"));
 /*****Routes******/
 
 const ThemeRoutes = [
+  // SignUp Page
   {
     path: "/",
-    element: <FullLayout />,
+    element: <SignUp />, // Show SignUp as the first page
+  },
+
+  // Dashboard and Other Pages
+  {
+    path: "/dashboard",
+    element: <FullLayout />, // Layout for the dashboard and nested pages
     children: [
-      { path: "/", element: <Navigate to="/starter" /> },
-      { path: "/starter", exact: true, element: <Starter /> },
-      { path: "/about", exact: true, element: <About /> },
-      { path: "/alerts", exact: true, element: <Alerts /> },
-      { path: "/badges", exact: true, element: <Badges /> },
-      { path: "/buttons", exact: true, element: <Buttons /> },
-      { path: "/cards", exact: true, element: <Cards /> },
-      { path: "/grid", exact: true, element: <Grid /> },
-      { path: "/table", exact: true, element: <Tables /> },
-      { path: "/forms", exact: true, element: <Forms /> },
-      { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
+      { path: "starter", element: <Starter /> }, // Relative path
+      { path: "Medicaments", element: <Medicaments /> }, // Relative path
+
+      { path: "about", element: <About /> }, // Relative path
+      { path: "alerts", element: <Alerts /> }, // Relative path
+      { path: "badges", element: <Badges /> }, // Relative path
+      { path: "buttons", element: <Buttons /> }, // Relative path
+      { path: "cards", element: <Cards /> }, // Relative path
+      { path: "grid", element: <Grid /> }, // Relative path
+      { path: "table", element: <Tables /> }, // Relative path
+      { path: "comptes", element: <Compte /> }, // Relative path
+      { path: "breadcrumbs", element: <Breadcrumbs /> }, // Relative path
+      { path: "", element: <Navigate to="starter" /> }, // Redirect to "starter" relative to "/dashboard"
     ],
   },
 ];
+
+
 
 export default ThemeRoutes;
