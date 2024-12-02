@@ -26,8 +26,11 @@ class MedicamentController extends Controller
     {
         try {
             $medicament = new Medicament([
-                "nomcategorie" => $request->input("nomcategorie"),
-                "imagecategorie" => $request->input("imagecategorie")
+                "nom" => $request->input("nom"),
+                "label" => $request->input("label"),
+                "prix" => $request->input("prix"),
+                "image" => $request->input("image"),
+                "quantite" => $request->input("quantite")
             ]);
             $medicament->save();
 
