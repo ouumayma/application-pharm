@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import "./SignUp.module.css";
+import "./SignUpmodule.css";
 import { useRoutes } from "react-router-dom";
 import Themeroutes from "../routes/Router";
 import { Link, useNavigate,useParams } from 'react-router-dom'
-function SignUp
-() {
+// function SignUp() {
+const SignUp = () => {
     const initialValues = {
         username: "",
         email: "",
@@ -12,6 +12,7 @@ function SignUp
         confirmPassword: "",
         type:"",
     };
+    const[account,setAccount]=useState({})
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [type, setType] = useState("");
@@ -35,13 +36,13 @@ function SignUp
 
   
     const handleSubmit = (e) => {
-        e.preventDefault(); // Prevent default form behavior
+       // e.preventDefault(); // Prevent default form behavior
         // Perform form validation and processing logic here
         // setFormErrors(validate(formValues));
         // setIsSubmit(true);
         
-        // navigate("/starter"); // Navigate to the desired route (replace with your path
-        navigate("/dashboard"); 
+       
+       navigate("/dashboard/Medicaments"); 
  
     };
 

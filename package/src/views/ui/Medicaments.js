@@ -85,10 +85,10 @@ import {
               <FormGroup style={styles.formGroup}>
         <Label for="exampleEmail">Nom de Medicament</Label>
         <Input
-          id="exampleEmail"
-          name="email"
-          placeholder="with a placeholder"
-          type="email"
+          id="Nom_de_Medicament"
+          name="Nom_de_Medicament"
+          placeholder="Nom de Medicament"
+          type="string"
         />
       </FormGroup>
               <div style={styles.formContainer}>
