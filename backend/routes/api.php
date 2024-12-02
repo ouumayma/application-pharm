@@ -10,7 +10,7 @@ Route::middleware('api')->group(function () {
     Route::resource('medicaments', MedicamentController::class);
     });
 
-<<<<<<< HEAD
+
     Route::group([
         'middleware' => 'api',
         'prefix' => 'users'
@@ -22,7 +22,7 @@ Route::middleware('api')->group(function () {
         // Route::get('/user-profile', [AuthController::class, 'userProfile']);
         });
         Route::get('users/verify-email', [AuthController::class, 'verifyEmail'])->name('verify.email');
-=======
+
     Route::middleware('api')->group(function () {
 
         Route::resource('medecins', MedecinController::class);
@@ -36,8 +36,8 @@ Route::middleware('api')->group(function () {
             
             });
 
+           
+                
             Route::get('/patients/{idmed}', [PatientNController::class, 'showPatientsByMed']);
             
             Route::get('/medicaments', [MedicamentController::class, 'medicamentsPaginate']);
-
->>>>>>> d313c6fb9b00715a5f90443e7d4f8351b6071fe1

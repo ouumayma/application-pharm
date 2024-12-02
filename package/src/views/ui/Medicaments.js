@@ -19,8 +19,87 @@ import {
   import bg4 from "../../assets/images/bg/bg4.jpg";
 
   import { faPrescriptionBottle, faUserMd, faUserInjured, faPills } from "@fortawesome/free-solid-svg-icons";
+  import React, { useEffect, useState } from 'react'
+  import { Link, useNavigate,useParams } from 'react-router-dom'
+  import axios from 'axios'
+
+  import { FilePond,registerPlugin } from 'react-filepond'
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 
   const Forms = () => {
+
+    const[medicament,setMedicament]=useState({})
+    const navigate=useNavigate()// Initialize the navigation hook
+    const [files, setFiles] = useState([]);
+
+
+    const fetchscategories=async()=>{
+      try {
+        const res=await axios.get("http://localhost:8000/api/medicaments")
+        setMedicament(res.data)
+        console.log(res.data)
+       // setisLoading(false)
+      } catch (error) {
+        console.log(error)
+      }
+  
+    }
+
+    useEffect(()=>{
+      fetchscategories()
+    },[])
+
+
+    const serverOptions = () => { 
+      return {
+        process: (fieldName, file, metadata, load, error, progress, abort) => {
+        
+        const data = new FormData();
+        data.append('file', file);
+        data.append('upload_preset', 'iit2025S1');
+        data.append('cloud_name', 'esps');
+    data.append('publicid', file.name);
+    axios.post('https://api.cloudinary.com/v1_1/esps/image/upload', data)
+    .then((response) => response.data)
+    .then((data) => {
+    
+    setMedicament({...medicament,image:data.url}) ;
+    load(data);
+    })
+    .catch((error) => {
+    console.error('Error uploading file:', error);
+    error('Upload failed');
+    abort();
+    });
+    },
+    };
+    };
+    
+    const handleSave=async(e)=>{
+      try {
+        e.preventDefault()
+        console.log(medicament)
+        await axios.post("http://localhost:8000/api/medicaments",medicament)
+        .then(res=>{
+          // Reset the medicament object to its initial values
+    setMedicament({
+      nom: "",
+      label: "",
+      prix: "",
+      image: "",
+      quantite: "",
+    });
+    setFiles([]);
+          navigate("/dashboard/Medicaments")
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
     const styles = {
         formContainer: {
           display: 'flex',
@@ -81,7 +160,7 @@ import {
             </CardTitle>
             <CardBody>
               <Form>
-
+              <div style={styles.formContainer}>
               <FormGroup style={styles.formGroup}>
         <Label for="exampleEmail">Nom de Medicament</Label>
         <Input
@@ -89,8 +168,25 @@ import {
           name="Nom_de_Medicament"
           placeholder="Nom de Medicament"
           type="string"
+          value={medicament.nom}
+          onChange={(e)=>setMedicament({...medicament,nom:e.target.value})}
         />
+        
       </FormGroup>
+
+      <FormGroup style={styles.formGroup}>
+        <Label for="exampleEmail">Label de Medicament</Label>
+        <Input
+          id="Label_de_Medicament"
+          name="Nom_de_Medicament"
+          placeholder="Label de Medicament"
+          type="string"
+          value={medicament.label}
+          onChange={(e)=>setMedicament({...medicament,label:e.target.value})}
+        />
+        
+      </FormGroup>
+      </div>
               <div style={styles.formContainer}>
       <FormGroup style={styles.formGroup}>
         <Label for="exampleEmail">Prix</Label>
@@ -99,6 +195,8 @@ import {
           name="email"
           placeholder="with a placeholder"
           type="email"
+          value={medicament.prix}
+          onChange={(e)=>setMedicament({...medicament,prix:e.target.value})}
         />
       </FormGroup>
       
@@ -109,15 +207,37 @@ import {
           name="password"
           placeholder="password placeholder"
           type="number" // Changed to 'number' for quantity input
+          value={medicament.quantite}
+          onChange={(e)=>setMedicament({...medicament,quantite:e.target.value})}
         />
       </FormGroup>
       </div>
      
-                <FormGroup>
+      <FormGroup as={Col} md="6" >
+        <Label>Image</Label>
+        <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
+<FilePond
+
+files={files}
+acceptedFileTypes="image/*"
+onupdatefiles={setFiles}
+allowMultiple={true}
+server={serverOptions()}
+name="file"
+
+/>
+</div>
+      </FormGroup>
+
+
+                {/* <FormGroup>
                   {/* <Label for="exampleFile">File</Label> */}
-                  <Input id="exampleFile" name="file" type="file" />
+                  {/* <Input id="exampleFile" name="file" type="file" 
+                   value={medicament.image}
+                   onChange={(e)=>setMedicament({...medicament,image:"https://res.cloudinary.com/dv4fi0p9a/image/upload/v1727013386/cld-sample-5.jpg"})}
+                  />
                  
-                </FormGroup>
+                </FormGroup> */} 
                 {/* <FormGroup>
                   <Label for="exampleSelect">Select</Label>
                   <Input id="exampleSelect" name="select" type="select">
@@ -179,7 +299,7 @@ import {
                 <FormGroup check>
                   <Input type="checkbox" /> <Label check>Check me out</Label>
                 </FormGroup> */}
-                <Button>Ajouter</Button>
+                <Button onClick={(e)=>handleSave(e)}>Ajouter</Button>
               </Form>
             </CardBody>
           </Card>
