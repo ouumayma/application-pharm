@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Controllers\Controller;
 use App\Models\Medicament;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,7 @@ class MedicamentController extends Controller
      */
     public function index()
     {
-        //
+       //
     }
 
     /**
@@ -20,29 +22,29 @@ class MedicamentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Medicament $medicament)
+    public function show($id)
     {
-        //
+       //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Medicament $medicament)
+    public function update(Request $request, $id)
     {
-        //
+       //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Medicament $medicament)
+    public function destroy($id)
     {
         //
     }

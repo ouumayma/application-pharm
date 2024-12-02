@@ -9,5 +9,7 @@ class Medicament extends Model
 {
     use HasFactory;
     protected $fillable =
-        ['nom','label','prix','image','quantite'];
+        ['label','prix','image','quantite'];
+
+
 }
