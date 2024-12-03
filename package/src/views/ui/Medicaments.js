@@ -15,13 +15,14 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Alert,
 } from "reactstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPills } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import Swal from "sweetalert2";
 import { FilePond, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
@@ -46,16 +47,40 @@ const Forms = () => {
   const navigate = useNavigate(); // Initialiser le hook de navigation
 
   const handleDelete = async (id) => {
-    // Demander une confirmation avant la suppression
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+    // Afficher une alerte de confirmation avant de supprimer
+    const result = await Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Vous ne pourrez pas revenir en arrière !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer!',
+      cancelButtonText: 'Annuler'
+    });
+
+    if (result.isConfirmed) {
       try {
-        // Envoyer la requête DELETE à l'API avec l'ID de l'article à supprimer
+        // Si l'utilisateur confirme, envoyer la requête DELETE à l'API
         await axios.delete(`http://localhost:8000/api/medicaments/${id}`);
-  
-        // Recharger la liste des médicaments après suppression
+
+        // Afficher un message de succès après suppression
+        Swal.fire(
+          'Supprimé!',
+          'Le médicament a été supprimé.',
+          'success'
+        );
+
+        // Recharger la liste des médicaments après la suppression
         fetchMedicaments();
       } catch (error) {
         console.error("Erreur lors de la suppression du médicament:", error);
+        // Afficher un message d'erreur si la suppression échoue
+        Swal.fire(
+          'Erreur!',
+          'Une erreur s\'est produite lors de la suppression.',
+          'error'
+        );
       }
     }
   };
@@ -123,7 +148,24 @@ const Forms = () => {
   const handleSave = async (e) => {
     e.preventDefault(); // Empêche le comportement par défaut du formulaire
   
+    // Si le formulaire n'est pas valide (certaines valeurs sont manquantes)
     if (!validate()) {
+      // Si les champs ne sont pas remplis, afficher une alerte de confirmation
+      const result = await Swal.fire({
+        title: 'Champs manquants',
+        text: 'Veuillez remplir tous les champs avant de soumettre le formulaire.',
+        icon: 'warning',
+        confirmButtonText: 'D\'accord',
+        showCancelButton: true,
+        cancelButtonText: 'Annuler'
+      });
+  
+      // Si l'utilisateur annule, ne rien faire
+      if (!result.isConfirmed) {
+        return;
+      }
+  
+      // Sinon, continuer l'exécution de la logique de sauvegarde
       return;
     }
   
@@ -159,6 +201,7 @@ const Forms = () => {
       console.log(error);
     }
   };
+  
   
 
   // Ouvrir le modal pour éditer un médicament

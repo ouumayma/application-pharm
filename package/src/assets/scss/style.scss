@@ -4,3 +4,20 @@
 @import "~bootstrap-icons/font/bootstrap-icons.scss";
 @import "./layout/sidebar";
 @import "./layout/container";
+
+/* styles.css ou App.css */
+.card-custom {
+    display: flex;
+    flex-direction: column;  /* Flex column pour forcer les enfants à occuper tout l'espace */
+    height: 100%;  /* Hauteur maximale de la carte */
+  }
+  
+  .card-custom .card-body {
+    flex-grow: 1;  /* Permet au corps de la carte de grandir pour remplir l'espace */
+  }
+  
+  .card-custom img {
+    object-fit: cover;  /* Assurez-vous que l'image occupe toute la largeur sans déformer */
+    height: 200px;  /* Donne une hauteur uniforme aux images */
+  }
+  
