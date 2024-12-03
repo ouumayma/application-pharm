@@ -10,17 +10,23 @@ import {
     Label,
     Input,
     FormText,
+    Alert,
   } from "reactstrap";
  
   import { Link, useNavigate,useParams } from 'react-router-dom'
-
+  import Swal from "sweetalert2";
   import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
   import { faUser } from '@fortawesome/free-solid-svg-icons';
   import ProjectTables from "../../components/dashboard/AccountsTables";
    import axios from 'axios'
 
 import React, { useEffect, useState } from 'react'
-
+import { FilePond,registerPlugin } from 'react-filepond'
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
   const Compte = () => {
     const styles = {
         buttonContainer: {
@@ -30,24 +36,125 @@ import React, { useEffect, useState } from 'react'
           width: "30%", // Adjust as needed for your layout
           margin: "0 auto", // Center the container on the page
         },
+        formContainer: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: '20px', // Optional gap between forms
+          width: '100%', // Ensure the container takes up the available width
+        },
+        formGroup: {
+          flex: 1, // Make each FormGroup take equal width
+        },
       };
 
       const[account,setAccount]=useState({})
+      const[accounts,setAccounts]=useState([])
       const navigate=useNavigate()// Initialize the navigation hook
-
-
-      const handleSave=async(e)=>{
+      const [files, setFiles] = useState([]);
+      
+      
+      const fetchaccounts=async()=>{
         try {
-          e.preventDefault()
-          console.log(account)
-          await axios.post("http://localhost:8000/api/users/register",account)
-          .then(res=>{
-            navigate("/dashboard/comptes")
-          })
+          const res=await axios.get("http://localhost:8000/api/users/users")
+          setAccounts(res.data)
+          console.log(res.data)
+         // setisLoading(false)
         } catch (error) {
           console.log(error)
         }
+    
       }
+  
+      useEffect(()=>{
+        fetchaccounts()
+      },[])
+
+      const serverOptions = () => { 
+        return {
+          process: (fieldName, file, metadata, load, error, progress, abort) => {
+          
+          const data = new FormData();
+          data.append('file', file);
+          data.append('upload_preset', 'iit2025S1');
+          data.append('cloud_name', 'esps');
+      data.append('publicid', file.name);
+      axios.post('https://api.cloudinary.com/v1_1/esps/image/upload', data)
+      .then((response) => response.data)
+      .then((data) => {
+      
+      setAccount({...account,avatar:data.url}) ;
+      load(data);
+      })
+      .catch((error) => {
+      console.error('Error uploading file:', error);
+      error('Upload failed');
+      abort();
+      });
+      },
+      };
+      };
+      
+      async function handleSave  (e)  {
+        e.preventDefault();
+      
+        // Check if any field in the account object is empty
+        const { name, email, password, password_confirmation } = account;
+        if (!name || !email || !password || !password_confirmation) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Fill the fields",
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
+          
+          return;
+        }
+      
+        // Check if passwords match
+        if (password !== password_confirmation) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Passwords doesn't match!",
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
+          return;
+        }
+      
+        try {
+          // Make the API call to register the user
+          await axios.post("http://localhost:8000/api/users/register", account)
+            .then((res) => {
+              // Reset the form after successful submission
+              setAccount({
+                name: "",
+                email: "",
+                password: "",
+                password_confirmation: "",
+                role: "",
+              });
+              setFiles([]); // If files are used
+      
+              // Optionally fetch categories after registration (uncomment if needed)
+              // fetchscategories();
+      
+              navigate("/dashboard/comptes"); // Navigate to the desired page
+            });
+        } catch (error) {
+          console.log(error);
+         
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "An error occurred, please try again!",
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
+        }
+      };
+      
+      // JSX for rendering the alert:
+  
+
     return (
       <Row>
         <Col>
@@ -62,7 +169,8 @@ import React, { useEffect, useState } from 'react'
             </CardTitle>
             <CardBody>
   <Form>
-    <FormGroup>
+  <div style={styles.formContainer}>
+    <FormGroup style={styles.formGroup}>
       <Label for="username">Username</Label>
       <Input
         id="username"
@@ -73,7 +181,7 @@ import React, { useEffect, useState } from 'react'
         type="text"
       />
     </FormGroup>
-    <FormGroup>
+    <FormGroup style={styles.formGroup}>
       <Label for="email">Email</Label>
       <Input
         id="email"
@@ -84,7 +192,9 @@ import React, { useEffect, useState } from 'react'
         onChange={(e)=>setAccount({...account,email:e.target.value})}
       />
     </FormGroup>
-    <FormGroup>
+    </div>
+    <div style={styles.formContainer}>
+    <FormGroup style={styles.formGroup}>
       <Label for="password">Password</Label>
       <Input
         id="password"
@@ -95,7 +205,7 @@ import React, { useEffect, useState } from 'react'
         onChange={(e)=>setAccount({...account,password:e.target.value})}
       />
     </FormGroup>
-    <FormGroup>
+    <FormGroup style={styles.formGroup}>
       <Label for="verifyPassword">Verify Password</Label>
       <Input
         id="verifyPassword"
@@ -106,6 +216,7 @@ import React, { useEffect, useState } from 'react'
         onChange={(e)=>setAccount({...account,password_confirmation:e.target.value})}
       />
     </FormGroup>
+    </div>
     <FormGroup>
       <Label for="role">Role</Label>
       <Input id="role" name="role"
@@ -120,7 +231,7 @@ import React, { useEffect, useState } from 'react'
         
       </Input>
     </FormGroup>
-    <FormGroup>
+    {/* <FormGroup>
       <Label for="photoIdentity">Photo d'identite</Label>
       <Input
         id="photoIdentity"
@@ -128,21 +239,28 @@ import React, { useEffect, useState } from 'react'
         accept="image/*" 
         value={account.avatar}
         onChange={(e)=>setAccount({...account,avatar:"  "})}
-        // Correctly specifies accepted file types
-        // onChange={(e) => {
-        //   const file = e.target.files[0]; // Get the first selected file
-        //   if (file) {
-        //     const imageUrl = URL.createObjectURL(file); // Generate a temporary URL for the file
-        //     setAccount({ ...account, avatar: imageUrl }); // Update the account object
-        //   }
-        // }}
+    
       />
-    </FormGroup>
-    <div style={styles.buttonContainer}>
+    </FormGroup> */}
+      <FormGroup as={Col} md="6" >
+        <Label>Photo d'identité</Label>
+        <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
+            <FilePond
+
+            files={files}
+            acceptedFileTypes="image/*"
+            onupdatefiles={setFiles}
+            allowMultiple={true}
+            server={serverOptions()}
+            name="file"
+
+            />
+            </div>
+      </FormGroup>
+    {/* <div style={styles.buttonContainer}> */}
       <Button onClick={(e)=>handleSave(e)}>Ajouter</Button>
-      <Button>Modifier</Button>
-      <Button>Supprimer</Button>
-    </div>
+     
+    {/* </div> */}
   </Form>
 </CardBody>
 
@@ -153,7 +271,7 @@ import React, { useEffect, useState } from 'react'
         {/* table-1*/}
         {/* --------------------------------------------------------------------------------*/}
         <Col lg="12">
-        <ProjectTables />
+        <ProjectTables accounts={accounts} account={account} setAccount={setAccount}/>
         </Col>
       </Row>
 

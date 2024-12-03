@@ -4,7 +4,9 @@ import user2 from "../../assets/images/users/user2.jpg";
 import user3 from "../../assets/images/users/user3.jpg";
 import user4 from "../../assets/images/users/user4.jpg";
 import user5 from "../../assets/images/users/user5.jpg";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Link } from "react-router-dom"
 const tableData = [
   {
     avatar: user1,
@@ -53,7 +55,40 @@ const tableData = [
   },
 ];
 
-const AccountsTables = () => {
+const AccountsTables = ({accounts, account,setAccount}) => {
+  const handleModify = async (id) => {
+    try {
+      // Find the account with the matching ID
+      const foundAccount = accounts.find((acc) => acc.id === id);
+      console.log(foundAccount)
+      setAccount({
+        name: foundAccount.name ,
+        email: foundAccount.email ,
+        password:foundAccount.password , // Password typically wouldn't be fetched for security reasons
+        password_confirmation:foundAccount.password_confirmation, // Similarly, for confirmation
+        role: foundAccount.role ,
+        avatar:foundAccount.avatar
+      });
+      if (foundAccount) {
+        // Set the account state with the found account's details
+        setAccount({
+          name: foundAccount.name || "",
+          email: foundAccount.email || "",
+          password: "", // Password typically wouldn't be fetched for security reasons
+          password_confirmation: "", // Similarly, for confirmation
+          role: foundAccount.role || "",
+        });
+        console.log(foundAccount)
+      } else {
+        console.log("Account not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+
   return (
     <div>
       <Card>
@@ -66,16 +101,16 @@ const AccountsTables = () => {
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
-                <th>Team Lead</th>
-                <th>Project</th>
+                <th>Employés</th>
+                <th>Role</th>
 
                 {/* <th>Status</th>
                 <th>Weeks</th> */}
-                <th>Role</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {tableData.map((tdata, index) => (
+              {accounts.map((tdata, index) => (
                 <tr key={index} className="border-top">
                   <td>
                     <div className="d-flex align-items-center p-2">
@@ -92,18 +127,17 @@ const AccountsTables = () => {
                       </div>
                     </div>
                   </td>
-                  <td>{tdata.project}</td>
-                  {/* <td>
-                    {tdata.status === "pending" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "holt" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
-                    ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
-                    )}
-                  </td>
-                  <td>{tdata.weeks}</td> */}
-                  <td>{tdata.budget}</td>
+                  <td>{tdata.role}</td>
+             
+                  <td>
+                  <button className="btn btn-warning btn-sm me-2" onClick={()=>handleModify(tdata.id)}>
+    <FontAwesomeIcon icon={faEdit} /> {/* Icon for Modify */}
+    </button>
+  <button className="btn btn-danger btn-sm"  >
+    <FontAwesomeIcon icon={faTrashAlt} /> {/* Icon for Delete */}
+  </button>
+</td>
+
                 </tr>
               ))}
             </tbody>
