@@ -11,6 +11,7 @@ Route::middleware('api')->group(function () {
 });
 
 
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'users'
@@ -23,6 +24,21 @@ Route::group([
     // Route::get('/user-profile', [AuthController::class, 'userProfile']);
 });
 Route::get('users/verify-email', [AuthController::class, 'verifyEmail'])->name('verify.email');
+
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'users'
+        ], function ($router) {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::get('/users', [AuthController::class, 'index']);
+         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/refreshToken', [AuthController::class, 'refresh']);
+        Route::get('/user-profile', [AuthController::class, 'userProfile']);
+        Route::get('users/verify-emailUnique', [AuthController::class, 'verifyEmailunique']);
+        });
+        Route::get('users/verify-email', [AuthController::class, 'verifyEmail'])->name('verify.email');
+
 
 Route::middleware('api')->group(function () {
 

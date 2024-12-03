@@ -94,9 +94,9 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
       };
       };
       
-      async function handleSave  (e)  {
+      async function handleSave(e) {
         e.preventDefault();
-      
+    
         // Check if any field in the account object is empty
         const { name, email, password, password_confirmation } = account;
         if (!name || !email || !password || !password_confirmation) {
@@ -106,23 +106,57 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
             text: "Fill the fields",
             footer: '<a href="#">Why do I have this issue?</a>'
           });
-          
           return;
         }
-      
+    
         // Check if passwords match
         if (password !== password_confirmation) {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Passwords doesn't match!",
+            text: "Passwords don't match!",
             footer: '<a href="#">Why do I have this issue?</a>'
           });
           return;
         }
-      
+    
+        // Check if password length is at least 6 characters
+        if (password.length < 6) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Password must be at least 6 characters long!",
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
+          return;
+        }
+    
+        // Check if the email is unique
         try {
-          // Make the API call to register the user
+          const emailCheckResponse = await axios.get(`http://localhost:8000/api/users/users/verify-emailUnique?email=${account.email}`);
+          
+          if (!emailCheckResponse.data.isUnique) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "This email is already taken!",
+              footer: '<a href="#">Why do I have this issue?</a>'
+            });
+            return;
+          }
+        } catch (error) {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "An error occurred while checking the email, please try again!",
+            footer: '<a href="#">Why do I have this issue?</a>'
+          });
+          return;
+        }
+    
+        // If all checks pass, send the registration request
+        try {
           await axios.post("http://localhost:8000/api/users/register", account)
             .then((res) => {
               // Reset the form after successful submission
@@ -133,16 +167,21 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
                 password_confirmation: "",
                 role: "",
               });
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "The account has been saved",
+                showConfirmButton: false,
+                timer: 1500
+              });
               setFiles([]); // If files are used
-      
-              // Optionally fetch categories after registration (uncomment if needed)
-              // fetchscategories();
-      
+
+              fetchaccounts()
+
               navigate("/dashboard/comptes"); // Navigate to the desired page
             });
         } catch (error) {
           console.log(error);
-         
           Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -151,7 +190,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
           });
         }
       };
-      
+    
       // JSX for rendering the alert:
   
 
