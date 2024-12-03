@@ -145,7 +145,28 @@ class AuthController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $user = User::findorFail($id);
+            $user->update($request->all());
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json("probleme de modification");
+        }
 
+        // Find the user by ID
+        // $user = User::find($id);
+
+        // if (!$user) {
+        //     return response()->json(['message' => 'User not found'], 404);
+        // }
+
+        // // Update user details
+        // $user->update($request->all());
+
+        // return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
+    }
 
     /**
      * Log the user out (Invalidate the token).
@@ -218,6 +239,17 @@ class AuthController extends Controller
             return response()->json($users);
         } catch (\Exception $e) {
             return response()->json("probleme de récupération de la liste des users");
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json("user supprimée avec succes");
+        } catch (\Exception $e) {
+            return response()->json("probleme de suppression de user");
         }
     }
 }
