@@ -171,11 +171,25 @@ const Forms = () => {
 
   // Ouvrir le modal pour éditer un médicament
   const handleEdit = (med) => {
+<<<<<<< HEAD
     
   setSelectedMedicament(med); // This should set the selected medication correctly
   setMedicament(med); // Pre-fill the form with the selected medication details
   setIsModalOpen(true); // Open the modal
 
+=======
+    setSelectedMedicament(med);
+    setMedicament({
+      nom: med.nom,
+      label: med.label,
+      prix: med.Prix,
+      quantite: med.quantite,
+      image: med.image,
+    });
+    setFiles([{ source: med.image, options: { type: 'local' } }]); // Précharger l'image dans FilePond
+    setIsModalOpen(true);
+  };
+>>>>>>> e3638992b496672fe5c872d373dd30856f1a1ee3
 
     // setSelectedMedicament(med);
     // setMedicament({
