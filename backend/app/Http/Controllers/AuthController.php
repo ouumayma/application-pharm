@@ -54,7 +54,7 @@ class AuthController extends Controller
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
-            'role' => 'required|string|in:admin,user', // Role doit être admin ou user
+            'role' => 'required|string|in:admin,Medecin,Patient,Pharmacien', // Role doit être admin ou user
 
             'avatar' => 'nullable|string', // Avatar optionnel et doit être une chaîne de caractères
         ]);
@@ -123,6 +123,29 @@ class AuthController extends Controller
     }
 
 
+    public function verifyEmailUnique(Request $request)
+    {
+        try {
+            // Validate the email parameter
+            $validated = $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            // Check if the email already exists in the database
+            $emailExists = User::where('email', $request->email)->exists();
+
+            // Return the response based on whether the email exists or not
+            return response()->json([
+                'isUnique' => !$emailExists
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 
     /**
      * Log the user out (Invalidate the token).
@@ -149,15 +172,15 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-   
 
-        public function refresh()
-        {
-            // Refresh the token using JWTAuth
-            $newToken = JWTAuth::refresh();
-            
-            return $this->createNewToken($newToken);
-        }
+
+    public function refresh()
+    {
+        // Refresh the token using JWTAuth
+        $newToken = JWTAuth::refresh();
+
+        return $this->createNewToken($newToken);
+    }
 
     /**
      * Get the authenticated User.

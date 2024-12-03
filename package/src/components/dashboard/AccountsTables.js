@@ -7,6 +7,7 @@ import user5 from "../../assets/images/users/user5.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom"
+
 const tableData = [
   {
     avatar: user1,
@@ -56,6 +57,7 @@ const tableData = [
 ];
 
 const AccountsTables = ({accounts, account,setAccount}) => {
+  
   const handleModify = async (id) => {
     try {
       // Find the account with the matching ID
