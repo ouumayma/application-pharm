@@ -129,14 +129,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function logout()
-    // {
-    //     $this->guard()->logout();
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'msg' => 'Logged out Successfully.'
-    //     ], 200);
-    // }
+    public function logout()
+    {
+        // $this->guard()->logout();
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Logged out Successfully.'
+        ], 200);
+    }
     /**
      * Return auth guard
      */
@@ -149,10 +149,16 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function refresh()
-    // {
-    //     return $this->createNewToken(auth('api')->refresh());
-    // }
+   
+
+        public function refresh()
+        {
+            // Refresh the token using JWTAuth
+            $newToken = JWTAuth::refresh();
+            
+            return $this->createNewToken($newToken);
+        }
+
     /**
      * Get the authenticated User.
      *
@@ -172,13 +178,23 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // protected function createNewToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth('api')->factory()->getTTL() * 60,
-    //         'user' => auth()->user()
-    //     ]);
-    // }
+    protected function createNewToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'user' => auth('api')->user()
+        ]);
+    }
+
+    public function index()
+    {
+        try {
+            $users = User::all();
+            return response()->json($users);
+        } catch (\Exception $e) {
+            return response()->json("probleme de récupération de la liste des users");
+        }
+    }
 }

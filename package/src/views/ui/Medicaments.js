@@ -41,8 +41,8 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
     const fetchscategories=async()=>{
       try {
         const res=await axios.get("http://localhost:8000/api/medicaments")
-        setMedicaments(res.data)
-        console.log(res.data)
+        setMedicaments(res.data.medicaments )
+        console.log(res.data.medicaments )
        // setisLoading(false)
       } catch (error) {
         console.log(error)
@@ -219,17 +219,17 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
       <FormGroup as={Col} md="6" >
         <Label>Image</Label>
         <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
-<FilePond
+            <FilePond
 
-files={files}
-acceptedFileTypes="image/*"
-onupdatefiles={setFiles}
-allowMultiple={true}
-server={serverOptions()}
-name="file"
+            files={files}
+            acceptedFileTypes="image/*"
+            onupdatefiles={setFiles}
+            allowMultiple={true}
+            server={serverOptions()}
+            name="file"
 
-/>
-</div>
+            />
+            </div>
       </FormGroup>
 
 
