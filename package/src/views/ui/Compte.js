@@ -310,7 +310,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
         {/* table-1*/}
         {/* --------------------------------------------------------------------------------*/}
         <Col lg="12">
-        <ProjectTables accounts={accounts} account={account} setAccount={setAccount}/>
+        <ProjectTables accounts={accounts} account={account} setAccount={setAccount} setAccounts={setAccounts}/>
         </Col>
       </Row>
 

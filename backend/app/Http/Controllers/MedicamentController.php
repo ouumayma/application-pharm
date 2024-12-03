@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Controllers\Controller;
 use App\Models\Medicament;
 use Illuminate\Http\Request;
 
@@ -12,18 +14,21 @@ class MedicamentController extends Controller
      */
     public function index()
     {
+
         try {
             $medicaments = Medicament::all();
             return response()->json($medicaments);
         } catch (\Exception $e) {
             return response()->json("probleme de récupération de la liste des medicaments");
         }
+
     }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
             "nom" => "required|string|max:255",
             "label" => "required|string|max:255",
@@ -38,6 +43,7 @@ class MedicamentController extends Controller
         } catch (\Exception $e) {
             return response()->json(["error" => "Insertion impossible", "details" => $e->getMessage()], 500);
         }
+
     }
 
     /**
@@ -45,12 +51,14 @@ class MedicamentController extends Controller
      */
     public function show($id)
     {
+
         try {
             $medicament = Medicament::findOrFail($id);
             return response()->json($medicament);
         } catch (\Exception $e) {
             return response()->json("probleme de récupération des données");
         }
+
     }
 
     /**
@@ -58,6 +66,7 @@ class MedicamentController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         try {
             $medicament = medicament::findorFail($id);
             $medicament->update($request->all());
@@ -65,10 +74,11 @@ class MedicamentController extends Controller
         } catch (\Exception $e) {
             return response()->json("probleme de modification");
         }
+
     }
     /**
-    
-    
+
+
      * Remove the specified resource from storage.
      */
     public function destroy($id)
@@ -89,10 +99,10 @@ class MedicamentController extends Controller
         try {
             // Récupérer le nombre d'éléments par page (par défaut : 10)
             $perPage = request()->input('pageSize', 10);
-    
+
             // Récupérer les médicaments avec pagination
             $medicaments = Medicament::paginate($perPage);
-    
+
             // Retourner les résultats paginés
             return response()->json([
                 'medicaments' => $medicaments->items(), // Les médicaments pour la page actuelle
@@ -105,5 +115,5 @@ class MedicamentController extends Controller
             return response()->json(["error" => "Pagination impossible : {$e->getMessage()}"], 500);
         }
     }
-    
+
 }

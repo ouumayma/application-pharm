@@ -43,7 +43,7 @@ const Forms = () => {
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false); // Pour contrôler l'ouverture du modal
-  const [selectedMedicament, setSelectedMedicament] = useState(null); // Pour stocker le médicament à modifier
+  const [selectedMedicament, setSelectedMedicament] = useState({}); // Pour stocker le médicament à modifier
   const navigate = useNavigate(); // Initialiser le hook de navigation
 
   const handleDelete = async (id) => {
@@ -146,6 +146,7 @@ const Forms = () => {
 
   // Fonction de sauvegarde du médicament
   const handleSave = async (e) => {
+<<<<<<< HEAD
     e.preventDefault(); // Empêche le comportement par défaut du formulaire
   
     // Si le formulaire n'est pas valide (certaines valeurs sont manquantes)
@@ -167,19 +168,29 @@ const Forms = () => {
   
       // Sinon, continuer l'exécution de la logique de sauvegarde
       return;
+=======
+    e.preventDefault(); // Prevent form submission default action
+    
+    if (!validate()) {
+      return; // Stop if validation fails
+>>>>>>> 3d838156aa48c19f2c1ee37c1f0eca5b744abfea
     }
   
     try {
-      // Vérifiez si nous sommes en mode édition ou ajout
       if (selectedMedicament) {
-        // Si un médicament est sélectionné (mode édition), envoyez une requête PUT pour mettre à jour les informations
-        await axios.put(`http://localhost:8000/api/medicaments/${selectedMedicament.id}`, medicament);
+        // Editing an existing medication
+        console.log("Updating:", selectedMedicament);
+        await axios.put(
+          `http://localhost:8000/api/medicaments/${selectedMedicament.id}`,
+          medicament
+        );
       } else {
-        // Sinon, envoyez une requête POST pour ajouter un nouveau médicament
+        // Adding a new medication
+        console.log("Adding new medication");
         await axios.post("http://localhost:8000/api/medicaments", medicament);
       }
   
-      // Réinitialiser l'état pour le prochain formulaire
+      // Reset the form
       setMedicament({
         nom: "",
         label: "",
@@ -187,25 +198,35 @@ const Forms = () => {
         quantite: "",
         image: "",
       });
-      setFiles([]); // Réinitialiser les fichiers téléchargés
-  
-      // Fermer le modal
-      setIsModalOpen(false);
-  
-      // Recharger la liste des médicaments
-      fetchMedicaments();
-  
-      // Rediriger l'utilisateur vers la page des médicaments
-      navigate("/dashboard/Medicaments");
+      setFiles([]);
+      setIsModalOpen(false); // Close modal
+      setSelectedMedicament(null); // Clear selected medication
+      fetchMedicaments(); // Refresh the list
+      navigate("/dashboard/Medicaments"); // Redirect to the dashboard
     } catch (error) {
-      console.log(error);
+      console.error("Save operation failed:", error);
     }
   };
   
   
 
+
+
+
+
+
+
+  
+
   // Ouvrir le modal pour éditer un médicament
   const handleEdit = (med) => {
+<<<<<<< HEAD
+    
+  setSelectedMedicament(med); // This should set the selected medication correctly
+  setMedicament(med); // Pre-fill the form with the selected medication details
+  setIsModalOpen(true); // Open the modal
+
+=======
     setSelectedMedicament(med);
     setMedicament({
       nom: med.nom,
@@ -214,6 +235,19 @@ const Forms = () => {
       quantite: med.quantite,
       image: med.image,
     });
+    setFiles([{ source: med.image, options: { type: 'local' } }]); // Précharger l'image dans FilePond
+    setIsModalOpen(true);
+  };
+>>>>>>> e3638992b496672fe5c872d373dd30856f1a1ee3
+
+    // setSelectedMedicament(med);
+    // setMedicament({
+    //   nom: med.nom,
+    //   label: med.label,
+    //   prix: med.Prix,
+    //   quantite: med.quantite,
+    //   image: med.image,
+    // });
     setFiles([{ source: med.image, options: { type: 'local' } }]); // Précharger l'image dans FilePond
     setIsModalOpen(true);
   };

@@ -1,4 +1,4 @@
-import { lazy } from "react";
+ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 
 /****Layouts*****/
