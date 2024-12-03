@@ -49,18 +49,8 @@ const Forms = () => {
     // Demander une confirmation avant la suppression
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
       try {
-<<<<<<< HEAD
         // Envoyer la requête DELETE à l'API avec l'ID de l'article à supprimer
         await axios.delete(`http://localhost:8000/api/medicaments/${id}`);
-=======
-        const res=await axios.get("http://localhost:8000/api/medicaments")
-        setMedicaments(res.data.medicaments )
-        console.log(res.data.medicaments )
-       // setisLoading(false)
-      } catch (error) {
-        console.log(error)
-      }
->>>>>>> 032268baf3e68c4e33be23dc3b65d418316a2d6b
   
         // Recharger la liste des médicaments après suppression
         fetchMedicaments();
@@ -173,22 +163,17 @@ const Forms = () => {
 
   // Ouvrir le modal pour éditer un médicament
   const handleEdit = (med) => {
-  setSelectedMedicament(med);
-  <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)}>
-    <ModalHeader toggle={() => setIsModalOpen(false)}>
-      Modifier un médicament
-    </ModalHeader>
-    <ModalBody>
-      ...
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" onClick={handleSave}>Enregistrer</Button>
-      <Button color="secondary" onClick={() => setIsModalOpen(false)}>Annuler</Button>
-    </ModalFooter>
-  </Modal>
-  setIsModalOpen(true);
-};
-
+    setSelectedMedicament(med);
+    setMedicament({
+      nom: med.nom,
+      label: med.label,
+      prix: med.Prix,
+      quantite: med.quantite,
+      image: med.image,
+    });
+    setFiles([{ source: med.image, options: { type: 'local' } }]); // Précharger l'image dans FilePond
+    setIsModalOpen(true);
+  };
 
   // Styles du formulaire
   const styles = {
@@ -215,7 +200,6 @@ const Forms = () => {
             </CardTitle>
             <CardBody>
               <Form>
-<<<<<<< HEAD
                 <div style={styles.formContainer}>
                   <FormGroup style={styles.formGroup} invalid={!!errors.nom}>
                     <Label for="Nom_de_Medicament">Nom de Medicament</Label>
@@ -228,131 +212,6 @@ const Forms = () => {
                       onChange={(e) => setMedicament({ ...medicament, nom: e.target.value })}
                     />
                     {errors.nom && <FormFeedback>{errors.nom}</FormFeedback>}
-=======
-              <div style={styles.formContainer}>
-              <FormGroup style={styles.formGroup}>
-        <Label for="exampleEmail">Nom de Medicament</Label>
-        <Input
-          id="Nom_de_Medicament"
-          name="Nom_de_Medicament"
-          placeholder="Nom de Medicament"
-          type="string"
-          value={medicament.nom}
-          onChange={(e)=>setMedicament({...medicament,nom:e.target.value})}
-        />
-        
-      </FormGroup>
-
-      <FormGroup style={styles.formGroup}>
-        <Label for="exampleEmail">Label de Medicament</Label>
-        <Input
-          id="Label_de_Medicament"
-          name="Nom_de_Medicament"
-          placeholder="Label de Medicament"
-          type="string"
-          value={medicament.label}
-          onChange={(e)=>setMedicament({...medicament,label:e.target.value})}
-        />
-        
-      </FormGroup>
-      </div>
-              <div style={styles.formContainer}>
-      <FormGroup style={styles.formGroup}>
-        <Label for="exampleEmail">Prix</Label>
-        <Input
-          id="exampleEmail"
-          name="email"
-          placeholder="with a placeholder"
-          type="email"
-          value={medicament.prix}
-          onChange={(e)=>setMedicament({...medicament,prix:e.target.value})}
-        />
-      </FormGroup>
-      
-      <FormGroup style={styles.formGroup}>
-        <Label for="examplePassword">Quantité</Label>
-        <Input
-          id="examplePassword"
-          name="password"
-          placeholder="password placeholder"
-          type="number" // Changed to 'number' for quantity input
-          value={medicament.quantite}
-          onChange={(e)=>setMedicament({...medicament,quantite:e.target.value})}
-        />
-      </FormGroup>
-      </div>
-     
-      <FormGroup as={Col} md="6" >
-        <Label>Image</Label>
-        <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
-            <FilePond
-
-            files={files}
-            acceptedFileTypes="image/*"
-            onupdatefiles={setFiles}
-            allowMultiple={true}
-            server={serverOptions()}
-            name="file"
-
-            />
-            </div>
-      </FormGroup>
-
-
-                {/* <FormGroup>
-                  {/* <Label for="exampleFile">File</Label> */}
-                  {/* <Input id="exampleFile" name="file" type="file" 
-                   value={medicament.image}
-                   onChange={(e)=>setMedicament({...medicament,image:"https://res.cloudinary.com/dv4fi0p9a/image/upload/v1727013386/cld-sample-5.jpg"})}
-                  />
-                 
-                </FormGroup> */} 
-                {/* <FormGroup>
-                  <Label for="exampleSelect">Select</Label>
-                  <Input id="exampleSelect" name="select" type="select">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Input>
-                </FormGroup> */}
-                {/* <FormGroup>
-                  <Label for="exampleSelectMulti">Select Multiple</Label>
-                  <Input
-                    id="exampleSelectMulti"
-                    multiple
-                    name="selectMulti"
-                    type="select"
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </Input>
-                </FormGroup> */}
-                {/* <FormGroup>
-                  <Label for="exampleText">Text Area</Label>
-                  <Input id="exampleText" name="text" type="textarea" />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="exampleFile">File</Label>
-                  <Input id="exampleFile" name="file" type="file" />
-                  <FormText>
-                    This is some placeholder block-level help text for the above
-                    input. It's a bit lighter and easily wraps to a new line.
-                  </FormText>
-                </FormGroup>
-                <FormGroup tag="fieldset">
-                  <legend>Radio Buttons</legend>
-                  <FormGroup check>
-                    <Input name="radio1" type="radio" />{" "}
-                    <Label check>
-                      Option one is this and that—be sure to include why it's
-                      great
-                    </Label>
->>>>>>> 032268baf3e68c4e33be23dc3b65d418316a2d6b
                   </FormGroup>
 
                   <FormGroup style={styles.formGroup} invalid={!!errors.label}>
@@ -421,8 +280,8 @@ const Forms = () => {
       {/* Affichage des médicaments */}
       <Row>
   {medicaments.map((blg, index) => (
-    <Col sm="6" lg="6" xl="3" key={index}>
-      <Card className="blog-card">
+    <Col sm="6" lg="4" xl="3" key={index}>
+      <Card className="blog-card card-custom"> {/* Ajoutez la classe "card-custom" ici */}
         <img src={blg.image} alt={blg.nom} className="card-img-top" />
         <CardBody>
           <CardTitle tag="h5">{blg.nom}</CardTitle>
@@ -449,8 +308,82 @@ const Forms = () => {
 </Row>
 
 
+
       {/* Modal d'édition */}
-      
+      <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)}>
+        <ModalHeader toggle={() => setIsModalOpen(false)}>
+          Modifier un médicament
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <FormGroup>
+              <Label for="Nom_de_Medicament">Nom de Medicament</Label>
+              <Input
+                id="Nom_de_Medicament"
+                name="Nom_de_Medicament"
+                placeholder="Nom de Medicament"
+                type="text"
+                value={medicament.nom}
+                onChange={(e) => setMedicament({ ...medicament, nom: e.target.value })}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="Label_de_Medicament">Label de Medicament</Label>
+              <Input
+                id="Label_de_Medicament"
+                name="Label_de_Medicament"
+                placeholder="Label de Medicament"
+                type="text"
+                value={medicament.label}
+                onChange={(e) => setMedicament({ ...medicament, label: e.target.value })}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="Prix">Prix</Label>
+              <Input
+                id="Prix"
+                name="Prix"
+                placeholder="Prix du médicament"
+                type="number"
+                value={medicament.prix}
+                onChange={(e) => setMedicament({ ...medicament, prix: e.target.value })}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="Quantite">Quantité</Label>
+              <Input
+                id="Quantite"
+                name="Quantite"
+                placeholder="Quantité du médicament"
+                type="number"
+                value={medicament.quantite}
+                onChange={(e) => setMedicament({ ...medicament, quantite: e.target.value })}
+              />
+            </FormGroup>
+
+            <FormGroup>
+  <Label>Image</Label>
+  <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
+    <FilePond
+      files={files}  // Assurez-vous que "files" contient l'image à afficher dans le modal
+      acceptedFileTypes="image/*"
+      onupdatefiles={setFiles}
+      allowMultiple={false}  // Permet uniquement une image
+      server={serverOptions()}
+      name="file"
+    />
+  </div>
+</FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleSave}>Enregistrer</Button>
+          <Button color="secondary" onClick={() => setIsModalOpen(false)}>Annuler</Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
