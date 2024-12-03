@@ -33,6 +33,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
   const Forms = () => {
 
     const[medicament,setMedicament]=useState({})
+    const[medicaments,setMedicaments]=useState([])
     const navigate=useNavigate()// Initialize the navigation hook
     const [files, setFiles] = useState([]);
 
@@ -40,7 +41,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
     const fetchscategories=async()=>{
       try {
         const res=await axios.get("http://localhost:8000/api/medicaments")
-        setMedicament(res.data)
+        setMedicaments(res.data)
         console.log(res.data)
        // setisLoading(false)
       } catch (error) {
@@ -81,7 +82,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
     
     const handleSave=async(e)=>{
       try {
-        e.preventDefault()
+         e.preventDefault()
         console.log(medicament)
         await axios.post("http://localhost:8000/api/medicaments",medicament)
         .then(res=>{
@@ -94,6 +95,8 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
       quantite: "",
     });
     setFiles([]);
+     // Refresh the list of medicaments
+     fetchscategories();
           navigate("/dashboard/Medicaments")
         })
       } catch (error) {
@@ -314,14 +317,14 @@ name="file"
 
                        {/***Blog Cards***/}
       <Row>
-        {BlogData.map((blg, index) => (
+        {medicaments.map((blg, index) => (
           <Col sm="6" lg="6" xl="3" key={index}>
             <Blog
               image={blg.image}
-              title={blg.title}
-              subtitle={blg.subtitle}
-              text={blg.description}
-              color={blg.btnbg}
+              nom={blg.nom}
+              label={blg.label}
+              prix={blg.prix}
+              // color={blg.btnbg}
             />
           </Col>
         ))}
